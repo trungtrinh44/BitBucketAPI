@@ -1,0 +1,131 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="trung.bitbucket.view.fragments.CreateNewRepoFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/edtName"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="19dp"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/edtDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/edtName"
+            android:layout_alignStart="@+id/edtName"
+            android:layout_below="@+id/edtName"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:minHeight="75dp" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/edtName"
+            android:layout_alignBottom="@+id/edtName"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="24dp"
+            android:text="Name" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/edtDesc"
+            android:layout_alignBottom="@+id/edtDesc"
+            android:layout_alignStart="@+id/textView7"
+            android:text="Description" />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/edtDesc"
+            android:layout_below="@+id/edtDesc"
+            android:layout_marginTop="20dp"
+            android:text="Private Repository" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/checkBox"
+            android:layout_alignBottom="@+id/checkBox"
+            android:layout_alignStart="@+id/textView9"
+            android:text="Access Level" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/checkBox"
+            android:layout_below="@+id/checkBox"
+            android:layout_marginTop="20dp">
+
+            <RadioButton
+                android:id="@+id/gitRadioBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="Git" />
+
+            <RadioButton
+                android:id="@+id/mecurialRadioBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/checkBox"
+                android:layout_below="@+id/checkBox"
+                android:text="Mercurial" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView2"
+            android:layout_alignTop="@+id/radioGroup"
+            android:text="Repository Type" />
+
+        <Spinner
+            android:id="@+id/forkOptSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/edtDesc"
+            android:layout_alignRight="@+id/edtDesc"
+            android:layout_alignStart="@id/edtDesc"
+            android:layout_below="@+id/radioGroup"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView3"
+            android:layout_alignTop="@+id/forkOptSpinner"
+            android:text="Forking" />
+
+        <Button
+            android:id="@+id/btnCreateRepo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/forkOptSpinner"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="Create" />
+    </RelativeLayout>
+</ScrollView>
