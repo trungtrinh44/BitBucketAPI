@@ -20,39 +20,25 @@ import trung.bitbucket.presenter.MainPresenter;
 import trung.bitbucket.view.activities.MainActivity;
 import trung.bitbucket.view.adapters.RepoListAdapter;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
-public class RepoListFragment extends BaseFragment implements ViewOps, CreateNewRepoFragment.OnFragmentInteractionListener {
+import static trung.bitbucket.utils.Constants.userInfo;
+
+public class RepoListFragment extends BaseFragment implements ViewOps {
     private final String REPOSITORIES = "Repositories";
-    private OnListFragmentInteractionListener mListener;
     private PresenterViewOps presenter;
     private Repositories repositories;
     private RepoListAdapter adapter;
     private RecyclerView recyclerView;
-    private UserInfo userInfo;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
+
     public RepoListFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static RepoListFragment newInstance(UserInfo info) {
+
+    public static RepoListFragment newInstance() {
         RepoListFragment fragment = new RepoListFragment();
         fragment.title = "Repositories";
         Log.d("RepoListFragment", "create new instance");
         return fragment;
-    }
-
-    public UserInfo getUserInfo() {
-        return userInfo;
     }
 
     @Override
@@ -74,7 +60,6 @@ public class RepoListFragment extends BaseFragment implements ViewOps, CreateNew
         Context context = view.getContext();
         recyclerView = (RecyclerView) view.findViewById(R.id.repoList);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        userInfo = ((MainActivity) getContext()).getUserInfo();
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,28 +69,13 @@ public class RepoListFragment extends BaseFragment implements ViewOps, CreateNew
         });
         presenter = new MainPresenter(this);
         if (repositories != null) {
-            adapter = new RepoListAdapter(repositories.values, mListener, recyclerView, this);
+            adapter = new RepoListAdapter(repositories.values, recyclerView, this);
             recyclerView.setAdapter(adapter);
-        } else if (presenter != null) {
+        } else {
             Log.d("RepoListFragment", "get repositories presenter");
             presenter.getRepositories(userInfo.username);
         }
         return view;
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -127,7 +97,7 @@ public class RepoListFragment extends BaseFragment implements ViewOps, CreateNew
     @Override
     public void returnRepositories(Repositories repos) {
         repositories = repos;
-        adapter = new RepoListAdapter(repositories.values, mListener, recyclerView, this);
+        adapter = new RepoListAdapter(repositories.values, recyclerView, this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -151,23 +121,5 @@ public class RepoListFragment extends BaseFragment implements ViewOps, CreateNew
         if (presenter != null) presenter.deleteRepo(repo);
     }
 
-    @Override
-    public void onFragmentInteraction() {
 
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(Repository item);
-    }
 }

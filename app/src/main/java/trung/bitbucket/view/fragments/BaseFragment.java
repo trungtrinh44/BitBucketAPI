@@ -8,9 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import trung.bitbucket.view.activities.MainActivity;
 
-/**
- * mai
- */
 
 public abstract class BaseFragment extends Fragment {
     private final String TITLE = "title";
@@ -20,8 +17,17 @@ public abstract class BaseFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof MainActivity) {
+            ((MainActivity) context).handleFragmentTransaction(this);
+        }
+        ((AppCompatActivity) context).setTitle(title);
+    }
 
-            ((MainActivity) context).setCurrentFragment(this);
+    @Override
+    public void onStart() {
+        super.onStart();
+        Context context = getActivity();
+        if (context instanceof MainActivity) {
+            ((MainActivity) context).handleFragmentTransaction(this);
         }
         ((AppCompatActivity) context).setTitle(title);
     }

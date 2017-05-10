@@ -16,27 +16,21 @@ import java.util.List;
 
 import trung.bitbucket.R;
 import trung.bitbucket.model.Repository;
+import trung.bitbucket.utils.Constants;
 import trung.bitbucket.view.fragments.RepoListFragment;
 
 public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHolder> {
 
     private static final int UNSELECTED = -1;
-    private final RepoListFragment.OnListFragmentInteractionListener mListener;
     private List<Repository> mValues;
     private RecyclerView recyclerView;
     private int selectedItem = UNSELECTED;
     private RepoListFragment repoListFragment;
 
-    public RepoListAdapter(List<Repository> items, RepoListFragment.OnListFragmentInteractionListener listener, RecyclerView recyclerView, RepoListFragment repoListFragment) {
+    public RepoListAdapter(List<Repository> items, RecyclerView recyclerView, RepoListFragment repoListFragment) {
         mValues = items;
-        mListener = listener;
         this.repoListFragment = repoListFragment;
         this.recyclerView = recyclerView;
-    }
-
-    public void setmValues(List<Repository> mValues) {
-        this.mValues = mValues;
-        notifyDataSetChanged();
     }
 
     public void addValue(Repository value) {
@@ -70,19 +64,19 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public final ExpandableLayout expandableLayout;
-        public final RelativeLayout expandButton;
-        public final ImageView imgLock;
-        public final ImageView imgTrash;
-        public final TextView owner;
-        public Repository mItem;
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        final View mView;
+        final TextView mIdView;
+        final TextView mContentView;
+        final ExpandableLayout expandableLayout;
+        final RelativeLayout expandButton;
+        final ImageView imgLock;
+        final ImageView imgTrash;
+        final TextView owner;
+        Repository mItem;
         private int position;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
@@ -95,11 +89,11 @@ public class RepoListAdapter extends RecyclerView.Adapter<RepoListAdapter.ViewHo
             expandButton.setOnClickListener(this);
         }
 
-        public void bind(int position) {
+        void bind(int position) {
             this.position = position;
             expandButton.setSelected(false);
             expandableLayout.collapse(false);
-            if (mItem.owner.uuid.equals(repoListFragment.getUserInfo().uuid)) {
+            if (mItem.owner.uuid.equals(Constants.userInfo.uuid)) {
                 owner.setText("Owner: You");
                 imgTrash.setOnClickListener(new View.OnClickListener() {
                     @Override

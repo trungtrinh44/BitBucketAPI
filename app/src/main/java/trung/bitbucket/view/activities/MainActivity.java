@@ -31,27 +31,24 @@ import trung.bitbucket.model.Repositories;
 import trung.bitbucket.model.Repository;
 import trung.bitbucket.model.UserInfo;
 import trung.bitbucket.presenter.MainPresenter;
+import trung.bitbucket.view.fragments.BaseFragment;
 import trung.bitbucket.view.fragments.CreateNewRepoFragment;
 import trung.bitbucket.view.fragments.RepoListFragment;
 
+import static trung.bitbucket.utils.Constants.userInfo;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ViewOps, RepoListFragment.OnListFragmentInteractionListener,
-        CreateNewRepoFragment.OnFragmentInteractionListener {
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ViewOps {
     public static final String USER_INFO = "UserInfo";
     public static final String TOKEN = "myToken";
-    private UserInfo userInfo;
     private PresenterViewOps presenter;
     private FragmentManager manager;
     private DrawerLayout drawer;
     private Fragment currentFragment;
+    private NavigationView navigationView;
 
     public UserInfo getUserInfo() {
         return userInfo;
-    }
-
-    public void setCurrentFragment(Fragment currentFragment) {
-        this.currentFragment = currentFragment;
     }
 
     @Override
@@ -87,18 +84,23 @@ public class MainActivity extends AppCompatActivity
         presenter = new MainPresenter(this);
         if (sharedPreferences.contains(TOKEN))
             presenter.setToken(sharedPreferences.getString(TOKEN, ""));
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.repos);
         if (savedInstanceState == null) {
-            Log.d("MainActivity", "create new repolistfragment");
-            Fragment fragment = RepoListFragment.newInstance(userInfo);
+            Log.d("MainActivity", "create new RepoListFragment");
+            Fragment fragment = RepoListFragment.newInstance();
             manager.beginTransaction().replace(R.id.content_main, fragment).commit();
         }
+        setUserView();
+    }
+
+    private void setUserView() {
         View headerView = navigationView.getHeaderView(0);
         ((TextView) headerView.findViewById(R.id.userDisplayname)).setText(userInfo.displayName);
         ((TextView) headerView.findViewById(R.id.username)).setText(userInfo.username);
         Glide.with(this).load(userInfo.links.avatar.href).into((ImageView) headerView.findViewById(R.id.userIcon));
+        Log.d("User avatar", userInfo.links.avatar.href);
     }
 
     @Override
@@ -108,11 +110,16 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else if (manager.getBackStackEntryCount() > 0) {
             manager.popBackStack();
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         } else super.onBackPressed();
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    public void handleFragmentTransaction(BaseFragment fragment) {
+        currentFragment = fragment;
+        if (currentFragment instanceof RepoListFragment) {
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -121,7 +128,7 @@ public class MainActivity extends AppCompatActivity
             if (item.isChecked()) {
                 switch (item.getItemId()) {
                     case R.id.repos:
-                        fragment = RepoListFragment.newInstance(userInfo);
+                        fragment = RepoListFragment.newInstance();
                         break;
                 }
                 manager.beginTransaction().replace(R.id.content_main, fragment).commit();
@@ -159,7 +166,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void callCreateNewRepo(PresenterViewOps presenter) {
-        Fragment fragment = CreateNewRepoFragment.newInstance(this, presenter);
+        Fragment fragment = CreateNewRepoFragment.newInstance(presenter);
         manager.beginTransaction().replace(R.id.content_main, fragment).addToBackStack(null).commit();
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
@@ -194,18 +201,5 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void deleteRepo(Repository repo) {
 
-    }
-
-    @Override
-    public void onListFragmentInteraction(Repository item) {
-
-    }
-
-    @Override
-    public void onFragmentInteraction() {
-        if (manager.getBackStackEntryCount() > 0) {
-            manager.popBackStack();
-        }
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 }

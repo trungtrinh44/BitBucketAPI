@@ -12,7 +12,7 @@ public interface PresenterViewOps {
 
     void getRepositories(String username);
 
-    void createRepositories(CreateNewRepo.RepoInfo info, String userName);
+    void createRepository(CreateNewRepo.RepoInfo info, String userName);
 
     void setToken(String token);
 

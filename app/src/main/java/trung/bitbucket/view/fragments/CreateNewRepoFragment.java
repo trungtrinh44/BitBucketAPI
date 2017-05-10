@@ -1,8 +1,6 @@
 package trung.bitbucket.view.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,21 +15,11 @@ import android.widget.Toast;
 import trung.bitbucket.R;
 import trung.bitbucket.interfaces.PresenterViewOps;
 import trung.bitbucket.model.CreateNewRepo;
-import trung.bitbucket.view.activities.MainActivity;
+import trung.bitbucket.utils.Constants;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CreateNewRepoFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CreateNewRepoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class CreateNewRepoFragment extends BaseFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
     private static PresenterViewOps presenter;
     private EditText edtName;
     private EditText edtDesc;
@@ -39,30 +27,16 @@ public class CreateNewRepoFragment extends BaseFragment {
     private RadioButton gitBtn;
     private RadioButton mecurialBtn;
     private Spinner forkOption;
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    private OnFragmentInteractionListener mListener;
 
     public CreateNewRepoFragment() {
         // Required empty public constructor
     }
 
-    public static CreateNewRepoFragment newInstance(OnFragmentInteractionListener mListener, PresenterViewOps presenter) {
+    public static CreateNewRepoFragment newInstance(PresenterViewOps presenter) {
         CreateNewRepoFragment fragment = new CreateNewRepoFragment();
-        fragment.mListener = mListener;
         CreateNewRepoFragment.presenter = presenter;
         fragment.title = "Create new repository";
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -88,7 +62,6 @@ public class CreateNewRepoFragment extends BaseFragment {
                     return;
                 }
                 String desc = edtDesc.getText().toString();
-                String username = ((MainActivity) getContext()).getUserInfo().username;
                 boolean isPrivate = checkBox.isChecked();
                 String scm = mecurialBtn.isChecked() ? "hg" : "git";
                 String fork_policy;
@@ -104,34 +77,10 @@ public class CreateNewRepoFragment extends BaseFragment {
                         break;
                 }
                 Log.d("CreateNewRepo", name + " " + desc + " " + scm + " " + fork_policy);
-                presenter.createRepositories(new CreateNewRepo.RepoInfo(isPrivate, desc, scm, name, fork_policy), username);
-                if (mListener != null) mListener.onFragmentInteraction();
+                presenter.createRepository(new CreateNewRepo.RepoInfo(isPrivate, desc, scm, name, fork_policy), Constants.userInfo.username);
+                getActivity().onBackPressed();
             }
         });
         return root;
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        }
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction();
     }
 }
